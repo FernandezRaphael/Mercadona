@@ -1,0 +1,27 @@
+{% for produits in produits %}
+                <div class="col-3 mb-3">
+                    <article class="m-2 card">
+                        <div class= "card-body">
+                            <h2 class="card-title">{{produits.nom}}</h2>
+                            </br>
+                            <p class="card-text">Description : {{produits.description}}
+                            </br>
+                            Catégorie : {{produits.categorie.nom}}
+                            </br>
+                            {% if (produits.NewPrix) != null and (produits.debut) != null and (produits.fin) != null %}
+                                Promotions : {{produits.promotions}} %
+                                </br>
+                                Prix : <b class="text-danger">{{produits.NewPrix}}</b> €
+                                </br>
+                                 Durée de la Promotions : du {{produits.debut|date('d/m/Y h:m')}} au {{produits.fin|date('d/m/Y h:m')}}</p>
+                            {% else %}
+                                Prix : {{produits.prix}} €
+                                </br>
+                            {% endif %}
+                            {% if app.user %}
+                                <a type="submit" class="btn btn-primary" href="/edition/{{produits.id}}">Ajouter une pormotion</a>
+                            {% endif %}
+                        </div>
+                    </article>
+                </div>
+{% endfor %}
