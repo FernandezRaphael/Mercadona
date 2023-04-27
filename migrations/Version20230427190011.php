@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20230425132423 extends AbstractMigration
+final class Version20230427190011 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -24,6 +24,8 @@ final class Version20230425132423 extends AbstractMigration
         $this->addSql('CREATE TABLE produits (id INT NOT NULL, categorie_id INT NOT NULL, filename VARCHAR(255) DEFAULT NULL, nom VARCHAR(255) NOT NULL, description VARCHAR(255) NOT NULL, prix DOUBLE PRECISION NOT NULL, promotions DOUBLE PRECISION DEFAULT NULL, new_prix DOUBLE PRECISION DEFAULT NULL, debut TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, fin TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_BE2DDF8CBCF5E72D ON produits (categorie_id)');
         $this->addSql('COMMENT ON COLUMN produits.updated_at IS \'(DC2Type:datetime_immutable)\'');
+        $this->addSql('CREATE TABLE "user" (id INT NOT NULL, email VARCHAR(180) NOT NULL, roles JSON NOT NULL, password VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649E7927C74 ON "user" (email)');
         $this->addSql('ALTER TABLE produits ADD CONSTRAINT FK_BE2DDF8CBCF5E72D FOREIGN KEY (categorie_id) REFERENCES categorie (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
 
@@ -34,5 +36,6 @@ final class Version20230425132423 extends AbstractMigration
         $this->addSql('ALTER TABLE produits DROP CONSTRAINT FK_BE2DDF8CBCF5E72D');
         $this->addSql('DROP TABLE categorie');
         $this->addSql('DROP TABLE produits');
+        $this->addSql('DROP TABLE "user"');
     }
 }
