@@ -3,18 +3,26 @@
 namespace App\Entity;
 
 use App\Repository\ProduitsRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: ProduitsRepository::class)]
+#[Vich\Uploadable]
+
 class Produits
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+
+    #[ORM\Column(nullable: true, length: 255)]
+    private ?string $filename = null;
+
+    #[Vich\UploadableField(mapping: 'property_image', fileNameProperty: 'filename')]
+    private ?File $imageFile = null;
 
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
@@ -41,13 +49,14 @@ class Produits
     #[ORM\JoinColumn(nullable: false)]
     private ?Categorie $categorie = null;
 
-    #[ORM\OneToMany(mappedBy: 'Produits', targetEntity: Images::class, orphanRemoval: true)]
-    private Collection $images;
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updated_at = null;
+
 
     
     public function __construct()
     {
-        $this->images = new ArrayCollection();
+       
     }
 
 
@@ -151,35 +160,43 @@ class Produits
 
         return $this;
     }
-
-    /**
-     * @return Collection<int, Images>
-     */
-    public function getImages(): Collection
+    
+    public function setFilename(?string $filename): void
     {
-        return $this->images;
+        $this->filename = $filename;
     }
 
-    public function addImage(Images $image): self
+    public function getFilename(): ?string
     {
-        if (!$this->images->contains($image)) {
-            $this->images->add($image);
-            $image->setProduits($this);
+        return $this->filename;
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+
+    public function setImageFile(?File $imageFile = null): void
+    {
+        $this->imageFile = $imageFile;
+        if (null !== $imageFile) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updated_at = new \DateTimeImmutable();
         }
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updated_at): self
+    {
+        $this->updated_at = $updated_at;
 
         return $this;
     }
-
-    public function removeImage(Images $image): self
-    {
-        if ($this->images->removeElement($image)) {
-            // set the owning side to null (unless already changed)
-            if ($image->getProduits() === $this) {
-                $image->setProduits(null);
-            }
-        }
-
-        return $this;
-    }
-
+    
 }

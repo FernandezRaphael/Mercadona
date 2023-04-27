@@ -38,10 +38,7 @@ class ProduitsFormType extends AbstractType
                     ;
                 }
             ])
-            ->add('images', FileType::class, [
-                'label' => false,
-                'multiple' => false,
-                'mapped' => false,
+            ->add('imageFile', FileType::class, [
                 'required' => true
             ])
         ;

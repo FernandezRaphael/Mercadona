@@ -21,7 +21,7 @@ class ProduitsController extends AbstractController
     {
         $produits = new Produits();
        
-        $filtre = $request->get("categories");
+        $filtre = $request->get("categorie");
        
         $produits = $produitsRepository->findAll();
 
