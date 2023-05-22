@@ -1,10 +1,8 @@
 {% for produits in produits %}
-                <div class="col-3 mb-3">
-                    <article class="m-2 card">
+                    <div class="card">
                         <div class= "card-body">
                             <h2 class="card-title">{{produits.nom}}</h2>
-                            <img src="http://raphaelfernandez.alwaysdata.net/public/uploads/produits/{{produits.filename}}" alt="card-img-top" style="width: 100%;
-	height: auto">
+                            <img src="uploads/produits/{{produits.filename}}" alt="{{produits.nom}}.image" style="width: 300px; height: auto">
                             </br>
                             <p class="card-text">Description : {{produits.description}}
                             </br>
@@ -24,6 +22,6 @@
                                 <a type="submit" class="btn btn-primary" href="/edition/{{produits.id}}">Ajouter une pormotion</a>
                             {% endif %}
                         </div>
-                    </article>
-                </div>
+                    </div>
+                    <br>
 {% endfor %}

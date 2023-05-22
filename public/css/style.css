@@ -1,0 +1,29 @@
+html, body {
+	height: 100%;
+}
+
+body{
+    background-color: lightcyan;
+}
+
+p, label, h1, select, span, input{
+    font-family: 'Acme', sans-serif;
+}
+
+
+
+a, h2, h1{
+    font-weight: bold;
+}
+
+.card{
+    background-color: rgb(248,249,250);
+}
+
+.btn{
+    font-family: 'Acme', sans-serif;
+}
+
+#filtre{
+    text-decoration: underline;
+}

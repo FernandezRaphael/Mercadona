@@ -37,7 +37,7 @@ class CategorieController extends AbstractController
             
             $em->persist(($categorie));
             $em->flush();
-
+            $this->addFlash('success', 'Catégorie ajouté avec succès !');
             return $this->redirectToRoute(('add_categorie'));
         }
 

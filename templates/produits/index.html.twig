@@ -2,31 +2,18 @@
 {% block title %}Catalogues{% endblock %}
 
 {% block body %}
-    <main class="container">
+    <div class="container">
+        <div class="row">
             <div class="col-12">
                 <h1>Liste des produits</h1>
             </div>
-        <section class="row">
-            <div class="card">
-                <div class= "card-body">
-                    <p class="card-text">Filtres</p>
-                    <form id="filtre">
-                        {% for categorie in categories %}
-                            <input type="checkbox" name="categories[]" id="cat{{categorie.id}}" value="{{categorie.id}}"><label for="cat{{categorie.id}}">{{categorie.nom}}</label>
-                        {% endfor %}
-                    </form>
-                </div>
+            <div class="col-md-3" id="filtre">
+                <p>Filtres :</p>
+                {% include 'produits/_filtre.html.twig' with {form: form} only %}
             </div>
-         </main>
-        </br>
-            <div id="content" class="d-flex flex-wrap align-items-center">
-                {% include "produits/_content.html.twig" %}
+            <div class="col-md-9">
+                    {% include "produits/_content.html.twig" %}
             </div>
-        </section>
-   
-{% endblock %}
-
-
-{% block javascripts %}
-    <script src="{{asset('js/filtres.js')}}"></script>
+        </div>
+    </div>
 {% endblock %}

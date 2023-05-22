@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\data\SearchData;
 use App\Entity\Produits;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -38,17 +39,22 @@ class ProduitsRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
-    public function getProduitsfiltre( $filtre = Null): void
+    
+    public function findSearch(SearchData $search): array
     {
-        $query = $this->createQueryBuilder('p');
+        $query = $this
+            ->createQueryBuilder('p')
+            ->select('c','p')
+            ->join('p.categorie','c');
 
-            if($filtre != Null){
-                $query->andWhere('p.categorie IN(:cat)')
-                ->setParameter(':cat', array_values($filtre));
-            };
+        if(!empty($search->categories)){
+            $query = $query
+                ->andWhere('c.id IN (:categorie)')
+                ->setParameter('categorie', $search->categories);
+        }
+
+        return $query->getQuery()->getResult();
     }
-
 
 //    /**
 //     * @return Produits[] Returns an array of Produits objects

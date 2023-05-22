@@ -2,14 +2,14 @@
 
 namespace App\Controller;
 
+use App\data\SearchData;
 use App\Entity\Produits;
 use App\Form\ProduitsFormType;
 use App\Form\PromoFormType;
-use App\Repository\CategorieRepository;
+use App\Form\SearchForm;
 use App\Repository\ProduitsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,25 +17,17 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProduitsController extends AbstractController
 {
     #[Route('/produits', name: 'app_produits')]
-    public function index(ProduitsRepository $produitsRepository, CategorieRepository $categorieRepository, Request $request): Response
+    public function index(ProduitsRepository $produitsRepository, Request $request): Response
     {
-        $produits = new Produits();
-       
-        $filtre = $request->get("categorie");
-       
-        $produits = $produitsRepository->findAll();
+        $data = new SearchData();
+        $form =$this->createForm(SearchForm::class, $data);
+        $form->handleRequest($request);
+        $produits = $produitsRepository->findSearch($data);
 
-        $produitfiltre = $produitsRepository->getProduitsfiltre($filtre);
-
-        if($request->get('ajax')){
-            return new JsonResponse([
-                'content' => $this->renderView('produits/_content.html.twig', compact('produitfiltre','produits'))
-            ]);
-        }
-
-        $categories = $categorieRepository->findAll();
-
-        return $this->render('produits/index.html.twig', compact('produits', 'categories'));
+        return $this->render('produits/index.html.twig', [
+            'produits' => $produits,
+            'form' => $form->createView()   
+        ]);
     }
 
     #[Route('/ajout', name: 'add_produits')]
@@ -55,7 +47,7 @@ class ProduitsController extends AbstractController
 
             $em->persist(($produits));
             $em->flush();
-
+            $this->addFlash('success', 'Produit ajouté avec succès !');
             return $this->redirectToRoute(('add_produits'));
         }
         
@@ -85,7 +77,7 @@ class ProduitsController extends AbstractController
 
             $em->persist(($produits));
             $em->flush();
-
+            $this->addFlash('success', 'Promotion ajouté avec succès !');
             return $this->redirectToRoute(('app_produits'));
         }
         
